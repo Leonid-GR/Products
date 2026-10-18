@@ -1,17 +1,33 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    static void main() {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        IO.println(String.format("Hello and welcome!"));
+import java.util.*;
+import java.util.stream.Collectors;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            IO.println("i = " + i);
-        }
+public class Main {
+    public static void main(String[] args) {
+
+        List<Product> products = Arrays.asList(
+                new Product("iPhone", "Electronics", 40000),
+                new Product("Samsung", "Electronics", 30000),
+                new Product("Laptop", "Computers", 50000),
+                new Product("PC", "Computers", 60000),
+                new Product("T-shirt", "Clothes", 800),
+                new Product("Jacket", "Clothes", 2000)
+        );
+
+        Map<String, Double> averages = products.stream()
+                .collect(Collectors.groupingBy(
+                        p -> p.category,
+                        Collectors.averagingDouble(p -> p.price)
+                ));
+
+        averages.forEach((category, average) ->
+                System.out.println(category + ": " + average));
+
+        String maxCategory = averages.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .get().getKey();
+
+        System.out.println("Highest average price: " + maxCategory);
     }
 }
